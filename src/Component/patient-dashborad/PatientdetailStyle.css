@@ -1,0 +1,30 @@
+/* PatientdetailStyle.css */
+.patient-detail-container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+   
+  }
+  
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .patient-info {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  .patient-info p {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
