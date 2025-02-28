@@ -19,7 +19,7 @@ const Patientnav = () => {
         >
           Details
         </button>
-        <button onClick={() => navigate("/patient/records", { replace: true })}>Records</button>
+        <button onClick={() => navigate(`/patient/records/${aadhaar}`, { replace: true })}>Records</button>
         <button onClick={() => {
           localStorage.removeItem("aadhaar"); // Clear Aadhaar on logout
           navigate("/");

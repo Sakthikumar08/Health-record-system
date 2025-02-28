@@ -62,6 +62,8 @@ const Home = () => {
   
       // Navigate to Patient Detail page & pass state
       navigate(`/patient/detail`, { state: { patient: data.patient } });
+   /*    navigate(`/patient/records`, { state: { record: data.patient } }); */
+
   
     } catch (error) {
       console.error("Error verifying OTP:", error);
@@ -97,7 +99,7 @@ const Home = () => {
 
       {showAadhaarModal && (
         <div className="modal">
-          <div className="modal-content">
+          <div className="modal-content" style={{width:"400px",}}>
             <h3>Enter Aadhaar Number</h3>
             <input type="text" value={aadhaar} onChange={(e) => setAadhaar(e.target.value)} maxLength={12} />
             <button onClick={requestOTP}>Request OTP</button>
