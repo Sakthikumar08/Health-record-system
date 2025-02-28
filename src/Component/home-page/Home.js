@@ -5,33 +5,69 @@ import "./HomeStyle.css";
 const Home = () => {
   const navigate = useNavigate();
   const [aadhaar, setAadhaar] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [showAadhaarModal, setShowAadhaarModal] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [patientEmail, setPatientEmail] = useState("");
 
-  const handleSearch = async () => {
+  // Request OTP Function
+  const requestOTP = async () => {
     if (aadhaar.trim().length !== 12) {
       alert("Please enter a valid 12-digit Aadhaar Number.");
       return;
     }
-  
+
     try {
       const response = await fetch(`http://localhost:5001/api/patient/${aadhaar}`);
       const data = await response.json();
-  
+
       if (!response.ok) {
         alert("Invalid Aadhaar Number. Patient not found.");
         return;
       }
-  
-      localStorage.setItem("aadhaar", aadhaar); // Store Aadhaar in localStorage
-  
-      // Navigate to patient component
-      navigate(`/patient/detail/${aadhaar}`);
+
+      alert(`OTP has been sent to ${data.email}`);
+      setPatientEmail(data.email);
+      setOtpSent(true);
+      setShowAadhaarModal(false);
+      setShowOtpModal(true);
     } catch (error) {
-      console.error("Error fetching patient data:", error);
+      console.error("Error requesting OTP:", error);
       alert("Server error. Please try again.");
     }
   };
-  
+
+  // Verify OTP Function
+  const verifyOTP = async () => {
+    if (otp.trim().length !== 6) {
+      alert("Please enter a valid 6-digit OTP.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5001/api/patient/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ aadhaarNumber: aadhaar, otp }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
+
+      alert("OTP Verified Successfully!");
+      setShowOtpModal(false);
+      navigate(`/patient/detail/${aadhaar}`); // Redirecting to Patient Dashboard
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      alert("Server error. Please try again.");
+    }
+  };
+
   return (
     <div className="home-container">
       <header className="home-header">
@@ -43,27 +79,35 @@ const Home = () => {
           <p>Access healthcare analytics and insights.</p>
         </div>
         <div className="card doctor-dashboard" onClick={() => navigate("/doctor")}>
-          <h2>doctor Dashboard</h2>
-          <p>upload the health report of patient.</p>
+          <h2>Doctor Dashboard</h2>
+          <p>Upload the health report of a patient.</p>
         </div>
-        <div className="card patient-dashboard" onClick={() => setShowModal(true)}>
+        <div className="card patient-dashboard" onClick={() => setShowAadhaarModal(true)}>
           <h2>Patient Dashboard</h2>
           <p>View and manage personal health records.</p>
         </div>
       </div>
 
-      {showModal && (
+      {/* Aadhaar Number Modal */}
+      {showAadhaarModal && (
         <div className="modal">
           <div className="modal-content">
             <h3>Enter Aadhaar Number</h3>
-            <input
-              type="text"
-              value={aadhaar}
-              onChange={(e) => setAadhaar(e.target.value)}
-              maxLength={12}
-            />
-            <button onClick={handleSearch}>Search</button>
-            <button onClick={() => setShowModal(false)}>Cancel</button>
+            <input type="text" value={aadhaar} onChange={(e) => setAadhaar(e.target.value)} maxLength={12} />
+            <button onClick={requestOTP}>Request OTP</button>
+            <button onClick={() => setShowAadhaarModal(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {/* OTP Modal */}
+      {showOtpModal && otpSent && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Enter OTP Sent to {patientEmail}</h3>
+            <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} maxLength={6} />
+            <button onClick={verifyOTP}>Verify OTP</button>
+            <button onClick={() => setShowOtpModal(false)}>Cancel</button>
           </div>
         </div>
       )}
