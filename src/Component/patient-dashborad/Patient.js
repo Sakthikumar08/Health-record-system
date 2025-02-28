@@ -12,7 +12,7 @@ const Patient = () => {
 
       <div className="content">
         <Routes>
-        <Route path="detail/:aadhaarNumber" element={<Patientdetail />} />
+        <Route path="detail" element={<Patientdetail />} />
           <Route path="records" element={<Patientrecords />} />
         </Routes>
       </div>

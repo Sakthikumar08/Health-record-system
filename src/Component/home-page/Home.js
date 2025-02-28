@@ -9,9 +9,8 @@ const Home = () => {
   const [showAadhaarModal, setShowAadhaarModal] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
-  const [patientEmail, setPatientEmail] = useState("");
+  const [patientData, setPatientData] = useState(null);
 
-  // Request OTP Function
   const requestOTP = async () => {
     if (aadhaar.trim().length !== 12) {
       alert("Please enter a valid 12-digit Aadhaar Number.");
@@ -21,14 +20,11 @@ const Home = () => {
     try {
       const response = await fetch(`http://localhost:5001/api/patient/${aadhaar}`);
       const data = await response.json();
-
       if (!response.ok) {
         alert("Invalid Aadhaar Number. Patient not found.");
         return;
       }
-
       alert(`OTP has been sent to ${data.email}`);
-      setPatientEmail(data.email);
       setOtpSent(true);
       setShowAadhaarModal(false);
       setShowOtpModal(true);
@@ -38,57 +34,67 @@ const Home = () => {
     }
   };
 
-  // Verify OTP Function
   const verifyOTP = async () => {
     if (otp.trim().length !== 6) {
       alert("Please enter a valid 6-digit OTP.");
       return;
     }
-
+  
     try {
       const response = await fetch("http://localhost:5001/api/patient/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ aadhaarNumber: aadhaar, otp }),
       });
-
+  
       const data = await response.json();
-
+      console.log("Full Patient Data:", data);
+  
       if (!response.ok) {
-        alert(data.message);
+        alert(data.message || "Patient not found");
         return;
       }
-
+  
       alert("OTP Verified Successfully!");
-      setShowOtpModal(false);
-      navigate(`/patient/detail/${aadhaar}`); // Redirecting to Patient Dashboard
+  
+      // Store the **entire** patient object in localStorage
+      localStorage.setItem("patientData", JSON.stringify(data.patient));
+  
+      // Navigate to Patient Detail page & pass state
+      navigate(`/patient/detail`, { state: { patient: data.patient } });
+  
     } catch (error) {
       console.error("Error verifying OTP:", error);
       alert("Server error. Please try again.");
     }
   };
+  
+  
+  
 
   return (
     <div className="home-container">
       <header className="home-header">
         <h1>Aadhaar-Linked Smart Health Record System</h1>
       </header>
-      <div className="dashboard-cards">
+    
+        
+        <div className="dashboard-cards">
         <div className="card government-dashboard" onClick={() => navigate("/government")}>
           <h2>Government Dashboard</h2>
           <p>Access healthcare analytics and insights.</p>
         </div>
         <div className="card doctor-dashboard" onClick={() => navigate("/doctor")}>
-          <h2>Doctor Dashboard</h2>
-          <p>Upload the health report of a patient.</p>
+          <h2>doctor Dashboard</h2>
+          <p>upload the health report of patient.</p>
         </div>
         <div className="card patient-dashboard" onClick={() => setShowAadhaarModal(true)}>
           <h2>Patient Dashboard</h2>
           <p>View and manage personal health records.</p>
         </div>
+
       </div>
 
-      {/* Aadhaar Number Modal */}
       {showAadhaarModal && (
         <div className="modal">
           <div className="modal-content">
@@ -100,11 +106,10 @@ const Home = () => {
         </div>
       )}
 
-      {/* OTP Modal */}
       {showOtpModal && otpSent && (
         <div className="modal">
           <div className="modal-content">
-            <h3>Enter OTP Sent to {patientEmail}</h3>
+            <h3>Enter OTP</h3>
             <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} maxLength={6} />
             <button onClick={verifyOTP}>Verify OTP</button>
             <button onClick={() => setShowOtpModal(false)}>Cancel</button>

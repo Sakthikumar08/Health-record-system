@@ -1,50 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import "./PatientStyle.css";
+import { useLocation } from "react-router-dom";
 
 const Patientdetail = () => {
-  const { aadhaarNumber } = useParams();
+  const location = useLocation();
   const [patient, setPatient] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPatient = async () => {
-      setLoading(true); 
-      try {
-        const response = await fetch(`http://localhost:5001/api/patient/${aadhaarNumber}`);
-  
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-  
-        const data = await response.json();
-  
-        if (!data || Object.keys(data).length === 0) {
-          throw new Error("Empty response received.");
-        }
-  
-        setPatient(data);
-      } catch (error) {
-        console.error("Error fetching patient details:", error);
-        alert(`Error: ${error.message}`);
-      } finally {
-        setLoading(false); // Ensure loading state is removed after fetching
-      }
-    };
-  
-    fetchPatient();
-  }, [aadhaarNumber]);
-  
+    // Retrieve patient data from either location state or localStorage
+    const storedData = location.state?.patient || JSON.parse(localStorage.getItem("patientData"));
+    console.log("hi")
+    console.log(storedData);
+    if (storedData) {
+      setPatient(storedData);
+      console.log("hi")
+      console.log(storedData);
+    } else {
+      console.error("No patient data found");
+    }
+  }, [location.state]);
 
-
-  if (loading) return <h2>Loading patient details...</h2>;
-  if (!patient) return <h2>Patient not found</h2>;
+  if (!patient) return <h2>No patient found</h2>;
 
   return (
     <div>
       <h2>Patient Details</h2>
       <p><strong>👤 Name:</strong> {patient.fullName}</p>
-      <p><strong>📌 Date of Birth:</strong> {patient.dob}</p>
+      
+      <p><strong>📧 Email:</strong> {patient.email}</p>
+      <p><strong>🆔 Aadhaar:</strong> {patient.aadhaarNumber}</p>
       <p><strong>📌 Gender:</strong> {patient.gender}</p>
       <p><strong>📌 Blood Group:</strong> {patient.bloodGroup}</p>
       <p><strong>📌 Contact:</strong> {patient.contactNumber}</p>
@@ -66,6 +49,8 @@ const Patientdetail = () => {
       <p><strong>📄 Insurance Schemes:</strong> {patient.insuranceSchemes.join(", ")}</p>
       <p><strong>📜 Government ID Proofs:</strong> PAN: {patient.governmentIDProofs?.panCard}, Voter ID: {patient.governmentIDProofs?.voterID}, DL: {patient.governmentIDProofs?.drivingLicense}</p>
       <p><strong>🚨 Emergency Contact:</strong> {patient.emergencyContact?.name} ({patient.emergencyContact?.relation}) - {patient.emergencyContact?.phone}</p>
+
+
     </div>
   );
 };

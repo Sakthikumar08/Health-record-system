@@ -14,7 +14,7 @@ const Patientnav = () => {
       </div>
       <nav>
         <button 
-          onClick={() => navigate(`/patient/detail/${aadhaar}`, { replace: true })}
+          onClick={() => navigate(`/patient/detail`, { replace: true })}
           disabled={!aadhaar} // Disable if Aadhaar not found
         >
           Details
