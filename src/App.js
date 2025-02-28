@@ -1,15 +1,17 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./Component/home-page/Home";
 import Patient from "./Component/patient-dashborad/Patient";
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
-        <Route path="/*" element={<Patient />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/patient/*" element={<Patient />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 };
 
-export default App; // ✅ Make sure this line exists
+export default App;

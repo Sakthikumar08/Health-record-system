@@ -1,30 +1,74 @@
-/* PatientdetailStyle.css */
-.patient-detail-container {
-    max-width: 500px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: left;
-   
-  }
+.patientdetail-container {
+  width: 100%;
   
-  h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 15px;
-  }
+  background: #c9c1c1;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
+  font-family: Arial, sans-serif;
   
-  .patient-info {
-    font-size: 16px;
-    line-height: 1.6;
-  }
+}
+
+.heading {
+  text-align: center;
+  color: #333;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
   
-  .patient-info p {
-    background: #f9f9f9;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
+}
+
+.section {
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  background: #f7f7f7;
   
+}
+
+h3 {
+  color: #0056b3;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  color: #444;
+  margin: 5px 0;
+}
+
+
+
+.qr-code {
+  width: 140px;
+  height: 140px;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px auto;
+  border-radius: 8px;
+}
+
+.download-btn, .edit-btn, .logout-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.download-btn {
+  background: #28a745;
+  color: white;
+}
+
+.logout-btn {
+  background: #dc3545;
+  color: white;
+}

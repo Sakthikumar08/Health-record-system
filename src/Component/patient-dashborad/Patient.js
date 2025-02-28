@@ -8,13 +8,11 @@ import "./PatientStyle.css";
 const Patient = () => {
   return (
     <div className="patient-container">
-      {/* Left Sidebar (Navbar) */}
       <Patientnav />
 
-      {/* Right Content (Dynamic Component) */}
       <div className="content">
         <Routes>
-          <Route path="detail" element={<Patientdetail />} />
+        <Route path="detail/:aadhaarNumber" element={<Patientdetail />} />
           <Route path="records" element={<Patientrecords />} />
         </Routes>
       </div>
