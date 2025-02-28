@@ -12,24 +12,26 @@ const Home = () => {
       alert("Please enter a valid 12-digit Aadhaar Number.");
       return;
     }
-
+  
     try {
       const response = await fetch(`http://localhost:5001/api/patient/${aadhaar}`);
       const data = await response.json();
-
+  
       if (!response.ok) {
         alert("Invalid Aadhaar Number. Patient not found.");
         return;
       }
-
-      // Navigate to the patient detail page with the Aadhaar number
+  
+      localStorage.setItem("aadhaar", aadhaar); // Store Aadhaar in localStorage
+  
+      // Navigate to patient component
       navigate(`/patient/detail/${aadhaar}`);
     } catch (error) {
       console.error("Error fetching patient data:", error);
       alert("Server error. Please try again.");
     }
   };
-
+  
   return (
     <div className="home-container">
       <header className="home-header">
@@ -39,6 +41,10 @@ const Home = () => {
         <div className="card government-dashboard" onClick={() => navigate("/government")}>
           <h2>Government Dashboard</h2>
           <p>Access healthcare analytics and insights.</p>
+        </div>
+        <div className="card doctor-dashboard" onClick={() => navigate("/doctor")}>
+          <h2>doctor Dashboard</h2>
+          <p>upload the health report of patient.</p>
         </div>
         <div className="card patient-dashboard" onClick={() => setShowModal(true)}>
           <h2>Patient Dashboard</h2>
