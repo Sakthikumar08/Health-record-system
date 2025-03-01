@@ -99,7 +99,7 @@ const Home = () => {
 
       {showAadhaarModal && (
         <div className="modal">
-          <div className="modal-content" style={{width:"400px",}}>
+          <div className="modal-content" style={{width:"400px",alignItems:"center"}}>
             <h3>Enter Aadhaar Number</h3>
             <input type="text" value={aadhaar} onChange={(e) => setAadhaar(e.target.value)} maxLength={12} />
             <button onClick={requestOTP}>Request OTP</button>

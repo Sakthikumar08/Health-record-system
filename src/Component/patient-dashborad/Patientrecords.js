@@ -1,15 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./PatientrecordStyle.css"; // Ensure you have a CSS file for styling
 
-const Patientrecords = () => {
-  const records = [
-    { date: "2024-02-10", doctor: "Dr. Rajesh Kumar", disease: "Fever", medicine: "Paracetamol" },
-    { date: "2024-01-28", doctor: "Dr. Priya Sharma", disease: "Stomach Infection", medicine: "Omeprazole" },
-    { date: "2023-12-15", doctor: "Dr. Arvind Patel", disease: "Cold & Cough", medicine: "Cetirizine" },
-    { date: "2023-11-20", doctor: "Dr. Meena Reddy", disease: "Allergy", medicine: "Loratadine" },
-    { date: "2023-10-05", doctor: "Dr. Ramesh Verma", disease: "Headache", medicine: "Ibuprofen" },
-    { date: "2023-09-12", doctor: "Dr. Anjali Menon", disease: "Skin Rash", medicine: "Hydrocortisone" },
-  ];
+const Patientrecords = ({ aadhaarNumber }) => {
+  const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const fetchRecords = async () => {
+    setLoading(true);  // Start loading
+    try {
+      const response = await fetch(`http://localhost:5001/api/patient/${aadhaarNumber}/medical-records`);
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Error fetching records");
+      }
+      setRecords(data);
+    } catch (error) {
+      setError("Error fetching records: " + error.message);
+    } finally {
+      setLoading(false); 
+    }
+  };
+
+  useEffect(() => {
+    if (aadhaarNumber) {
+      fetchRecords();
+    }
+  }, [aadhaarNumber]);  // Dependency array ensures this runs when aadhaarNumber changes
+
+  if (loading) return <p>Loading medical records...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="patient-records">
@@ -24,14 +45,20 @@ const Patientrecords = () => {
           </tr>
         </thead>
         <tbody>
-          {records.map((record, index) => (
-            <tr key={index}>
-              <td>{record.date}</td>
-              <td>{record.doctor}</td>
-              <td>{record.disease}</td>
-              <td>{record.medicine}</td>
+          {records.length > 0 ? (
+            records.map((record, index) => (
+              <tr key={index}>
+                <td>{record.date}</td>
+                <td>{record.doctor}</td>
+                <td>{record.disease}</td>
+                <td>{record.medicine}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4">No medical records found</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

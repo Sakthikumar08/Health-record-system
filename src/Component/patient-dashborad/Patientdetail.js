@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import Patientrecords from "./Patientrecords";
 
 const Patientdetail = () => {
   const location = useLocation();
@@ -49,9 +50,10 @@ const Patientdetail = () => {
       <p><strong>📄 Insurance Schemes:</strong> {patient.insuranceSchemes.join(", ")}</p>
       <p><strong>📜 Government ID Proofs:</strong> PAN: {patient.governmentIDProofs?.panCard}, Voter ID: {patient.governmentIDProofs?.voterID}, DL: {patient.governmentIDProofs?.drivingLicense}</p>
       <p><strong>🚨 Emergency Contact:</strong> {patient.emergencyContact?.name} ({patient.emergencyContact?.relation}) - {patient.emergencyContact?.phone}</p>
-
-
+     
+      <Patientrecords aadhaarNumber={patient.aadhaarNumber} />
     </div>
+
   );
 };
 
